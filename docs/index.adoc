@@ -1,0 +1,78 @@
+= Starter: Using Webpack for your apps
+:toc: right
+:imagesdir: media/
+
+Best practice project setup for building apps using Webpack
+
+== Introduction
+
+TODO
+This guide will take you through the basic steps of creating a web app, using the basic building blocks of Enonic XP.
+
+During this exercise you will:
+
+* learn about http controllers and view templates
+* optimize serving of static assets
+* make use of the router library
+* set up a vhost, and more..
+
+== Create project
+
+To setup a project locally, simply run the following command:
+
+  enonic project create
+
+Choose "*React4XP*" from the list of starters, create a *new XP sandbox* and complete the setup wizard.
+
+NOTE: *Don't have the Enonic CLI?* Visit the https://developer.enonic.com/start[Getting started guide] to install it.
+
+
+== Project structure
+
+The project folder created should now contain a project structure, looking something like this:
+
+[source,files]
+----
+build.gradle <--1-->
+settings.gradle
+build/ <--2-->
+src/
+  main/
+    java/ <!--3-->
+    resources/ <!--4-->
+      assets/ <!--5-->
+      webapp/ <!--6-->
+----
+
+<1> The gradle files are used by the build system
+<2> Contains output files produced by the build
+<3> Optional folder for Java code (used to import sample site in this starter)
+<4> Main location for XP specific project code
+<5> Static assets such as css and icons are placed here
+<6> Folder containing the root webapp http controller
+
+== Building and Deploying
+
+To build and deploy the app, run this command from your shell:
+
+  enonic project deploy
+
+Accept starting the sandbox
+
+[NOTE]
+====
+To verify that your app started successfully, you should find an entry similar to this in the sandbox log:
+
+  2019-04-09 13:40:40,765 INFO ... Application [<name.of.your.app>] installed successfully
+====
+
+
+== Setting up site
+
+To see your current application:
+
+. log in to the XP admin console (http://localhost:8080)
+. open the "Applications" app, and select the listed applications
+. visit the app by clicking the web app link.
+
+video::webapp.mp4["Logging in, opening apps and launching webapp" width=1024px]

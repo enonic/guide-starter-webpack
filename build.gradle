@@ -23,7 +23,8 @@ asciidoctor {
 
     requires project.file('verbose-mode.rb')
 
-    attributes 'source-highlighter': 'coderay'
+    attributes 'source-highlighter': 'coderay',
+                idseparator: '-'
 
     resources {
         from(sourceDir) {

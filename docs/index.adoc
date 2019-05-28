@@ -1,5 +1,5 @@
 = Webpack Starter for Enonic XP
-:toc: right
+:toc: right1
 
 Best practice project setup for building apps using Webpack.
 
@@ -69,10 +69,12 @@ Current configuration of the starter (`webpack.config.js`) is set up with the en
 
 ```js
 module.exports = {
-    context: path.join(__dirname, '/src/main/resources/assets'),
-    entry: {
-        bundle: './js/main.js',
-    },
+  context: path.join(__dirname, '/src/main/resources/assets'),
+  entry: {
+    bundle: './js/main.js',
+  },
+  // ...
+}
 ```
 
 This file can import other JavaScript files in your project, like `example.js`:
@@ -106,7 +108,7 @@ build/
 
 The resulting bundles must be included/imported in the HTML templates.
 
-TIP: Learn more about the webpack from the official https://webpack.js.org/concepts[docs].
+NOTE: Learn more about the webpack from the official https://webpack.js.org/concepts[docs].
 
 
 == Building and Deploying
@@ -139,11 +141,13 @@ To verify that your app started successfully, you should find an entry similar t
 ====
 
 [TIP]
+====
 You can also combine several commands into one:
 
 ```bash
 $ enonic project gradle clean build deploy
 ```
+====
 
 
 == Customizing build

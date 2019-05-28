@@ -19,15 +19,6 @@ The project will support:
 * SASS and Less support;
 * Transpilation with Babel.
 
-== Compatibility
-
-[width="50%",options="header"]
-|===
-| Version | Min XP version
-
-|1.0.0	
-|7.0.0
-|===
 
 == Create a project
 
@@ -43,6 +34,7 @@ $ cd <project-folder>
 ```
 
 NOTE: *Don't have the Enonic CLI?* Visit the https://developer.enonic.com/start[Getting started guide] to install it.
+
 
 == Project structure
 
@@ -64,18 +56,49 @@ src/
       main.scss <!--5-->
 ----
 
-<1> Import example, that is imorted in the `main.js`.
+<1> Import example, that is imported in the `main.js`.
 <2> Entry point of your application. Will be transpiled to the `assets/js/bundle.js`.
 <3> Project styles in Less syntax.
 <4> Project styles in SASS syntax.
 <5> Project styles in SCSS syntax.
 
 
+== Project bundling
+
+In our current configuration, we have the entry point of our application called `main.js`. This file will import other JavaScript files from your project, like `example.js`:
+
+```js
+import example from './example';
+```
+
+or even the assests, like styles:
+
+```js
+import '../styles/main.less';
+import '../styles/main.sass';
+import '../styles/main.scss';
+```
+
+Starting from this entry point, webpack will recursively build a https://webpack.js.org/concepts/dependency-graph/[dependency graph] that includes every module your application needs, then bundle all of those modules into a small number of bundles (`bundle.js` and `bundle.css`) to be loaded by the browser. The resulting bundles must be included/imported in the HTML templates.
+
+TIP: Learn more about the webpack from the official https://webpack.js.org/concepts[docs].
+
+
 == Building and Deploying
 
-=== Deploying
+To *build* the app, run this command from your shell:
 
-To build and deploy the app, run this command from your shell:
+```bash
+$ enonic project build
+```
+
+To *delete* the older build before you run a new one :
+
+```bash
+$ enonic project clean
+```
+
+To *deploy* the app, run this command from your shell:
 
 ```bash
 $ enonic project deploy
@@ -90,24 +113,18 @@ To verify that your app started successfully, you should find an entry similar t
   2019-04-30 14:26:30,856 INFO ... Application [com.acme.example.webpack] installed successfully
 ====
 
-=== Building with Gradle
-
-The project can also be built with Gradle wrapper. In this case, you can set the environment type by calling the build with the `env` parameter. This parameter can be either `prod` ("production"), or `dev` ("development"). If the environment is not set explicitly, the "production" will be used by default.
-
-Here is how you can run build in "development" mode:
+You can also combine several commands into one:
 
 ```bash
-$ gradlew build -Penv=dev
+$ enonic project gradle clean build deploy
 ```
-
-In the "production" mode, all your code is minimized, dead code is removed, and no mappings are available.
 
 
 == Customizing build
 
 === Browserslist
 
-The JS code will be transpiled by the Babel, according to the https://github.com/browserslist/browserslist[Browserslist] environment settings. The CSS will be optimized, and all vendor prefixes will be automatically added, according to the supported browsers from the Browserslist configuration. By default, the starter extends the Enonic Browserslist configuration:
+The JS code will be transpiled by the Babel, according to the https://github.com/browserslist/browserslist[Browserslist] environment settings. That means, that you can use the *latest* JavaScript syntax and the Babel will automatically transpile your code to one, that is supported by the browsers, listed in the config. The CSS will be optimized, and all vendor prefixes will be automatically added, according to the supported browsers from the Browserslist configuration. By default, the starter extends the Enonic Browserslist configuration:
 
 .package.json
 ```json
@@ -123,8 +140,21 @@ See the official Browserslist https://github.com/browserslist/browserslist#brows
 
 === Less & Sass (Scss)
 
-The starter supports Less, Sass and Scss. But you probably won't be needing all of them. Just go to the `webpack.config.js`, drop the obsolete rule from the `module.rules` array and rename the remaining one. Also, don't forget to remove the corresponding node modules with the npm from the `package.json` for Less (`npm r less less-loader`) or Sass (`npm r node-sass sass-loader`).
+The starter supports Less, Sass, and Scss. But you probably won't be needing all of them. Just go to the `webpack.config.js`, drop the obsolete rule from the `module.rules` array and rename the remaining one. Also, don't forget to remove the corresponding node modules with the npm from the `package.json` for Less (`npm r less less-loader`) or Sass (`npm r node-sass sass-loader`).
 
 === Optimization
 
 In the "production" mode, the Webpack will do multiple default https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions[optimizations] to the resulting JS, except removing the console methods calls from the code, because the corresponding options (`drop_console`) is set to `false`.
+
+
+== Building for different environments
+
+The project can also be built for different environments. To set the environment type, call the build with the `env` parameter. This parameter can be either `prod` ("production"), or `dev` ("development"). If the environment is not set explicitly, the "production" will be used by default. The environment can be accessed from Gradle and will also be passed to the webpack configuration.
+
+Here is how you can run build in "development" mode:
+
+```bash
+$ enonic project gradle build -Penv=dev
+```
+
+In the "production" mode, all your code is minimized, dead code is removed, and no mappings are available.

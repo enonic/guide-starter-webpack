@@ -65,13 +65,23 @@ src/
 
 == Project bundling
 
-In our current configuration, we have the entry point of our application called `main.js`. This file will import other JavaScript files from your project, like `example.js`:
+Current configuration of the starter (`webpack.config.js`) is set up with the entry point of `main.js`. 
+
+```js
+module.exports = {
+    context: path.join(__dirname, '/src/main/resources/assets'),
+    entry: {
+        bundle: './js/main.js',
+    },
+```
+
+This file can import other JavaScript files in your project, like `example.js`:
 
 ```js
 import example from './example';
 ```
 
-or even the assests, like styles:
+or even the assets like styles and fonts:
 
 ```js
 import '../styles/main.less';
@@ -79,7 +89,22 @@ import '../styles/main.sass';
 import '../styles/main.scss';
 ```
 
-Starting from this entry point, webpack will recursively build a https://webpack.js.org/concepts/dependency-graph/[dependency graph] that includes every module your application needs, then bundle all of those modules into a small number of bundles (`bundle.js` and `bundle.css`) to be loaded by the browser. The resulting bundles must be included/imported in the HTML templates.
+Starting from this entry point, webpack will recursively build a https://webpack.js.org/concepts/dependency-graph/[dependency graph] that includes every module your application needs, then bundle all of those modules into a small number of bundles (`bundle.js` and `bundle.css`) inside the `build` folder to be loaded by the browser.
+
+.Build folder:
+[source,files]
+----
+build/
+ resources/
+  main/
+   assets/
+    js/
+      bundle.js
+    styles/
+      bundle.css
+----
+
+The resulting bundles must be included/imported in the HTML templates.
 
 TIP: Learn more about the webpack from the official https://webpack.js.org/concepts[docs].
 
@@ -113,6 +138,7 @@ To verify that your app started successfully, you should find an entry similar t
   2019-04-30 14:26:30,856 INFO ... Application [com.acme.example.webpack] installed successfully
 ====
 
+[TIP]
 You can also combine several commands into one:
 
 ```bash
@@ -124,7 +150,7 @@ $ enonic project gradle clean build deploy
 
 === Browserslist
 
-The JS code will be transpiled by the Babel, according to the https://github.com/browserslist/browserslist[Browserslist] environment settings. That means, that you can use the *latest* JavaScript syntax and the Babel will automatically transpile your code to one, that is supported by the browsers, listed in the config. The CSS will be optimized, and all vendor prefixes will be automatically added, according to the supported browsers from the Browserslist configuration. By default, the starter extends the Enonic Browserslist configuration:
+The JS code will be transpiled by the Babel, according to the https://github.com/browserslist/browserslist[Browserslist] environment settings. That means, that you can use the *latest* EcmaScript syntax and the Babel will automatically transpile your code to Javascript supported by the browsers listed in the config. The CSS will be optimized, and all vendor prefixes will be automatically added, according to the supported browsers from the Browserslist configuration. By default, the starter extends the Enonic Browserslist configuration:
 
 .package.json
 ```json

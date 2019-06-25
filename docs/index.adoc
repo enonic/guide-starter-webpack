@@ -56,7 +56,7 @@ src/
     ts/
       main.ts <!--6-->
       example.ts <!--7-->
-    tsconfig.client.json  <!--7-->
+    tsconfig.client.json  <!--8-->
 ----
 
 <1> Entry point of the bundle that will be transpiled from ES6 to Javascript at `assets/js/bundle.js`.
@@ -189,6 +189,7 @@ module.exports = {
   loader: 'ts-loader',
   // ...
 }
+```
 
 TIP: Instead of configuring the bundle manually you can make changes to config inside ``addTypescriptSupport`` function in `webpack.client.config.js`
 

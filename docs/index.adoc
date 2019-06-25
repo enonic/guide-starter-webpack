@@ -17,7 +17,8 @@ The project will support:
 * Code minification;
 * Production and development environments;
 * SASS and Less support;
-* Transpilation with Babel.
+* Transpilation of ECMAScript code with Babel (client- and server-side);
+* Transpilation of TypeScript code (client- and server-side).
 
 
 == Create project
@@ -31,9 +32,12 @@ Remember to create a *new XP sandbox* when completing the project wizard.
 NOTE: *Don't have the Enonic CLI?* Visit the https://developer.enonic.com/start[Getting started guide] to install it.
 
 
-== Project structure
+== Processing of client-side resources
 
-In the selected folder, you should now have a project structure, looking something like this:
+=== Project structure
+
+In the selected folder, you should now have a project structure, looking something like this
+(only client-side resources residing in the `assets` folder):
 
 .Selected files from the project structure:
 [source,files]
@@ -43,39 +47,108 @@ src/
   resources/
    assets/
     js/
-      example.js <!--1-->
-      main.js <!--2-->
+      main.es6 <!--1-->
+      example.es6 <!--2-->
     styles/
       main.less <!--3-->
       main.sass <!--4-->
       main.scss <!--5-->
+    ts/
+      main.ts <!--6-->
+      example.ts <!--7-->
+    tsconfig.client.json  <!--7-->
 ----
 
-<1> Import example, that is imported in the `main.js`.
-<2> Entry point of your application. Will be transpiled to the `assets/js/bundle.js`.
+<1> Entry point of the bundle that will be transpiled from ES6 to Javascript at `assets/js/bundle.js`.
+<1> 2nd level asset imported from `main.es6`. Will together with `main.es6` be bundled in `assets/js/bundle.js`
 <3> Project styles in Less syntax.
 <4> Project styles in SASS syntax.
 <5> Project styles in SCSS syntax.
+<6> Entry point of the bundle that will be transpiled from Typescript to Javascript at `assets/ts/bundle.js`.
+<7> 2nd level asset imported from `main.ts`. Will together with `main.ts` be bundled in `assets/ts/bundle.js`
+<8> Configuration of TypeScript transpilation
+
+=== Project bundling
+
+Common configuration of the starter is set in the `config` variable at the top of `webpack.client.config.js`:
+
+```js
+const config = {
+  context: path.join(__dirname, '/src/main/resources/assets'), <!--1-->
+  entry: {}, <!--2-->
+  output: { <!--3-->
+    path: path.join(__dirname, '/build/resources/main/assets'),
+    filename: '[name].js',
+  },
+  resolve: {
+    extensions: [],
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        sourceMap: true,
+        terserOptions: {
+          compress: {
+            drop_console: false,
+          },
+        },
+      }),
+    ],
+    splitChunks: {
+      minSize: 30000,
+    },
+  },
+  plugins: [], <!--4-->
+  mode: env.type,
+  devtool: isProd ? false : 'inline-source-map',
+}
+```
+
+<1> A path containing assets
+<2> Main entry point (typically `main.js`) for the dependency chain. Webpack will unwind this chain to bundle of the assets together. Empty
+by default, will be set further down in the config (see `addBabelSupport` and `addTypeScriptSupport` functions).
+<3> Target path where the bundle will be generated. Bundle name is typically named after main entry point.
+<4> Plugins will be injected by `addLessSupport`, `addSassSupport`, `addFontSupport`. You can add your own plugins here.
 
 
-== Project bundling
+To showcase its capabilities, current configuration of the starter (`webpack.client.config.js`) enables processing of ES6, Typescript, Less and SASS assets
+at the very end of the file:
 
-Current configuration of the starter (`webpack.config.js`) is set up with the entry point of `main.js`.
+```js
+module.exports = R.pipe(
+  addBabelSupport,
+  addTypeScriptSupport,
+  addLessSupport,
+  addSassSupport,
+  addFontSupport
+)(config);
+```
+
+You will most likely not use all of them, so just leave the steps for processing assets used by your application.
+
+=== Transpilation of ECMAScript with Babel
+
+Let's say you use `main.es6` as the main file which imports other assets (which import other assets and so on).
+Then you specify it like this:
 
 ```js
 module.exports = {
   context: path.join(__dirname, '/src/main/resources/assets'),
   entry: {
-    bundle: './js/main.js',
+    js/bundle: './js/main.es6',
   },
+  exclude: /node_modules/,
+  loader: 'babel-loader',
   // ...
 }
 ```
 
-This file can import other JavaScript files in your project, like `example.js`:
+TIP: Instead of configuring the bundle manually you can make changes to config inside ``addBabelSupport`` function in `webpack.client.config.js`
+
+The main entry point can import other ES6 files in your project, like `example.es6`:
 
 ```js
-import example from './example';
+import example from './example.es6';
 ```
 
 or even the assets like styles and fonts:
@@ -101,10 +174,85 @@ build/
       bundle.css
 ----
 
-The resulting bundles must be included/imported in the HTML templates.
+
+=== Transpilation of TypeScript code
+
+Configuration of Typescript processing is very similar to Babel. You specify main Typescript class file that will be used as the entry point:
+
+```js
+module.exports = {
+  context: path.join(__dirname, '/src/main/resources/assets'),
+  entry: {
+    ts/bundle: './ts/main.ts',
+  },
+  exclude: /node_modules/,
+  loader: 'ts-loader',
+  // ...
+}
+
+TIP: Instead of configuring the bundle manually you can make changes to config inside ``addTypescriptSupport`` function in `webpack.client.config.js`
+
+Import of resources in Typescript is identical to ES6 example from above.
+
+
+.Build folder:
+[source,files]
+----
+build/
+ resources/
+  main/
+   assets/
+    styles/
+      bundle.css
+    ts/
+      bundle.js
+----
+
+TIP: Additional config of Typescript processing can be adjusted in /src/main/resources/assets/tsconfig.client.json`
+
+
+The resulting client-side bundles are now ready be included/imported in the HTML templates.
+
 
 NOTE: Learn more about the webpack from the official https://webpack.js.org/concepts[docs].
 
+== Server-side processing
+
+Both ES6 and Typescript are supported where processing server-side resources, but the biggest difference between client-side and server-side processing
+in the Starter is that you don't want to merge server-side assets in one bundle, you want to transpile them one-to-one, so that's how the Starter is
+configured to process resources outside of '/src/main/resources/assets'.
+
+.Selected files from the project structure:
+[source,files]
+----
+src/
+ main/
+  resources/
+   assets/
+    lib/
+      observe/
+        observer.es6 <!--1-->
+    services/
+      check/
+        check.ts <!--2-->
+    webapp/
+      webapp.ts <!--3-->
+    main.es6 <!--4-->
+    tsconfig.server.json <!--5-->
+    types.ts <!--6-->
+----
+
+<1> Sample lib in ECMAScript
+<2> Sample service in TypeScript
+<3> webapp/webapp.ts will be transpiled to webapp/webapp.js to enable opening the app via URL
+<4> main.es6 will be transpiled to main.js by Babel and called at app startup
+<5> Configuration of TypeScript transpilation
+<6> Type definitions required for TypeScript transpilation
+
+=== Configuration
+
+Config for the Webpack processing of server-side assets is done in `webpack.server.config.js`.
+It's similar to the client-side config except that it only enables processing of ES6 and Typescript resources (choose which one to use or combine both).
 
 == Building and Deploying
 

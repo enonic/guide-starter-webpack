@@ -47,20 +47,20 @@ src/
   resources/
    assets/
     js/
-      main.es6 <!--1-->
-      example.es6 <!--2-->
+      main.es6 // <1>
+      example.es6 // <2>
     styles/
-      main.less <!--3-->
-      main.sass <!--4-->
-      main.scss <!--5-->
+      main.less // <3>
+      main.sass // <4>
+      main.scss // <5>
     ts/
-      main.ts <!--6-->
-      example.ts <!--7-->
-    tsconfig.client.json  <!--8-->
+      main.ts // <6>
+      example.ts // <7>
+    tsconfig.client.json  // <8>
 ----
 
 <1> Entry point of the bundle that will be transpiled from ES6 to Javascript at `assets/js/bundle.js`.
-<1> 2nd level asset imported from `main.es6`. Will together with `main.es6` be bundled in `assets/js/bundle.js`
+<2> 2nd level asset imported from `main.es6`. Will together with `main.es6` be bundled in `assets/js/bundle.js`
 <3> Project styles in Less syntax.
 <4> Project styles in SASS syntax.
 <5> Project styles in SCSS syntax.
@@ -74,9 +74,9 @@ Common configuration of the starter is set in the `config` variable at the top o
 
 ```js
 const config = {
-  context: path.join(__dirname, '/src/main/resources/assets'), <!--1-->
-  entry: {}, <!--2-->
-  output: { <!--3-->
+  context: path.join(__dirname, '/src/main/resources/assets'), // <1>
+  entry: {}, // <2>
+  output: { // <3>
     path: path.join(__dirname, '/build/resources/main/assets'),
     filename: '[name].js',
   },
@@ -98,7 +98,7 @@ const config = {
       minSize: 30000,
     },
   },
-  plugins: [], <!--4-->
+  plugins: [], // <4>
   mode: env.type,
   devtool: isProd ? false : 'inline-source-map',
 }
@@ -232,15 +232,15 @@ src/
    assets/
     lib/
       observe/
-        observer.es6 <!--1-->
+        observer.es6 // <1>
     services/
       check/
-        check.ts <!--2-->
+        check.ts // <2>
     webapp/
-      webapp.ts <!--3-->
-    main.es6 <!--4-->
-    tsconfig.server.json <!--5-->
-    types.ts <!--6-->
+      webapp.ts // <3>
+    main.es6 // <4>
+    tsconfig.server.json // <5>
+    types.ts // <6>
 ----
 
 <1> Sample lib in ECMAScript

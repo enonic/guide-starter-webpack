@@ -293,6 +293,20 @@ $ enonic project gradle clean build deploy
 ```
 ====
 
+== Dev mode
+
+There's also the possibility to start your sandbox in detached dev mode and keep watching for changes as you develop using the webpack starter.
+
+To *start* your sandbox in that mode and also *watch* for changes as you code, run this command from your shell:
+
+```bash
+$ enonic dev
+```
+
+[NOTE]
+====
+For further details on Enonic CLI's dev mode, read the https://developer.enonic.com/docs/enonic-cli/stable/dev#dev[docs].
+====
 
 == Customizing build
 

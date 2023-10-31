@@ -456,6 +456,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#building_and_deploying">Building and Deploying</a></li>
+<li><a href="#dev_mode">Dev mode</a></li>
 <li><a href="#customizing_build">Customizing build</a>
 <ul class="sectlevel2">
 <li><a href="#browserslist">Browserslist</a></li>
@@ -969,6 +970,36 @@ It&#8217;s similar to the client-side config except that it only enables process
 </div>
 </div>
 <div class="sect1">
+<h2 id="dev_mode"><a class="link" href="#dev_mode">Dev mode</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s also possible to start your sandbox in detached dev mode and have the build system watch for changes as you develop your app.</p>
+</div>
+<div class="paragraph">
+<p>To <strong>start</strong> your sandbox in that mode and have it <strong>watch</strong> for changes as you code, run this command from your shell:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ enonic dev</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For further details on Enonic CLI&#8217;s dev mode, read the <a href="https://developer.enonic.com/docs/enonic-cli/stable/dev#dev">docs</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="customizing_build"><a class="link" href="#customizing_build">Customizing build</a></h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -1028,7 +1059,7 @@ It&#8217;s similar to the client-side config except that it only enables process
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-08-04 11:44:01 UTC
+Last updated 2023-10-31 06:39:03 UTC
 </div>
 </div>
 </body>

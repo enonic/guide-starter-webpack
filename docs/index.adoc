@@ -295,7 +295,7 @@ $ enonic project gradle clean build deploy
 
 == Dev mode
 
-There's also the possibility to start your sandbox in detached dev mode and keep watching for changes as you develop using the webpack starter.
+It's also possible to start your sandbox in detached dev mode and have the build system watch for changes as you develop your app.
 
 To *start* your sandbox in that mode and also *watch* for changes as you code, run this command from your shell:
 

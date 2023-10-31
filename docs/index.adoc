@@ -297,7 +297,7 @@ $ enonic project gradle clean build deploy
 
 It's also possible to start your sandbox in detached dev mode and have the build system watch for changes as you develop your app.
 
-To *start* your sandbox in that mode and also *watch* for changes as you code, run this command from your shell:
+To *start* your sandbox in that mode and have it *watch* for changes as you code, run this command from your shell:
 
 ```bash
 $ enonic dev
